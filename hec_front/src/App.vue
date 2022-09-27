@@ -7,6 +7,7 @@
   <nav>
     <router-link to="/home">Home</router-link> |
     <router-link to="/vue">Vue Info</router-link> |
+    <router-link to="/tests">Tests</router-link> |
     <router-link to="/about">About</router-link>
   </nav>
   <router-view/>
