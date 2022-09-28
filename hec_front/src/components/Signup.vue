@@ -27,7 +27,7 @@
             <option v-for="reg in regions" v-bind:key="reg.region">{{ reg.region }}</option>
           </select>
           <br />
-          <!-- <select id="Country" v-model="user.country" v-on:change="countryChangedEvent" ref="sel-country" disabled>
+          <select id="Country" v-model="user.country" v-on:change="countryChangedEvent" ref="sel-country" disabled>
             <option disabled value="">Select Country</option>
             <option v-for="c in countries" v-bind:key="c.country">{{ c.text }}</option>
           </select>
@@ -40,14 +40,14 @@
           <select id="Town" v-model="user.town" v-on:change="townChangedEvent" ref="sel-town" disabled>
             <option disabled value="">Select Town</option>
             <option v-for="twn in towns" v-bind:key="twn.municipio">{{ twn.municipio }}</option>
-          </select> -->
+          </select>
         </fieldset>
         <br />
         <button type="submit" ref="submit" disabled>Submit</button>
       </form>
       <hr>
       <p>
-        {{msg}}
+        {{msg2}}
       </p>      
     </div>
   </div>
@@ -56,41 +56,62 @@
 <script>
 import axios from 'axios';
 
-function disableElements(level){
-  console.debug(`[DBG]: SIGNUP COMPONENT -> disableElements(${level})`);
+function disableElements(level, refs){
   switch(level){
     case "pwd":
-      console.debug(`pwd -> ${this.$refs['sel-pwd2']}`);
-      this.$refs['sel-pwd2'].disabled=true;
+      refs['sel-pwd2'].disabled=true;
     case "pwd2":
-      console.debug(`pwd2 -> ${this.$refs['sel-pwd2']}`);
-      this.$refs['sel-region'].disabled=true;
+      refs['sel-region'].disabled=true;
     case "region":
-      this.$refs['sel-country'].disabled=true;
+      refs['sel-country'].disabled=true;
     case "country":
-      this.$refs['sel-state'].disabled=true;
+      refs['sel-state'].disabled=true;
     case "state":
-      this.$refs['sel-town'].disabled=true;
-      this.$refs['submit'].disabled=true;
+      refs['sel-town'].disabled=true;
+      refs['submit'].disabled=true;
   }
 }
-function enableElements(level){
+function enableElements(level, refs, data){
   switch(level){
     case "pwd2":
-      this.$refs['sel-region'].disabled=false;
-      if(this.region.length == 0){break}          
+      refs['sel-region'].disabled=false;
+      if(data.region.length == 0){break}          
     case "region":
-      this.$refs['sel-country'].disabled=false
-      if(this.user.country.length == 0){break}
+      refs['sel-country'].disabled=false
+      if(data.user.country.length == 0){break}
     case "country":
-      this.$refs['sel-state'].disabled=false
-      if(this.user.state.length == 0){break}
+      refs['sel-state'].disabled=false
+      if(data.user.state.length == 0){break}
     case "state":
-      this.$refs['sel-town'].disabled=false;
-      if(this.user.town.length == 0){break}
-      this.$refs['submit'].disabled=false;
+      refs['sel-town'].disabled=false;
+      if(data.user.town.length == 0){break}
+      refs['submit'].disabled=false;
   }
 }
+function validateUserData(data){
+  let result={pass:true,msgs:[]};
+  let includeEstrict=/[^A-Z,Ñ]/g;
+  const email_re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if( (data.first_name.length == 0) || (data.first_name.search(includeEstrict) != -1) ){
+    result.msgs.push("The First Name is empty or contains forbidden characters");
+    result.pass=false;
+  }
+  includeEstrict=/[^A-Z,Ñ, ,-]/g;
+  if( (data.last_name.length == 0) || (data.last_name.search(includeEstrict) != -1) ){
+    result.msgs.push("The Last Name is empty or contains forbidden characters");
+    result.pass=false;
+  }
+  if(!email_re.test(String(data.email))){
+    result.msgs.push("The e-mail is not valid");
+    result.pass=false;
+  }
+  if( (data.cellphone.length < 10) || (!/^\d+$/.test(data.cellphone)) ){
+    result.msgs.push("The Cell Phone number is not valid");
+    result.pass=false;
+  }
+  return result;
+}
+
 export default {
   name: 'Signup',
   props: {msg: String},
@@ -106,12 +127,10 @@ export default {
               state: "",
               town: ""
       },
-      msg1:"",
       password2:"",
-      region: "South America",
-      country: "Colombia",
-      state: "Antioquia",
-      town: "Marinilla",
+      msg1:"",
+      msg2: "",
+      region: "",
       regions: [
                   {region: "Northern Africa"},
                   {region: "Eastern Africa"},
@@ -141,9 +160,9 @@ export default {
       countries: [],
       states: [],
       towns: [],
-      endpoint_countries: "https://restcountries.com/v3.1/subregion/"+this.region+"?fields=cca3,cca2,name,flag",
-      endpoint_states: "https://www.datos.gov.co/resource/xdk5-pm3f.json?$select=distinct%20departamento&$order=departamento",
-      endpoint_towns: "https://www.datos.gov.co/resource/xdk5-pm3f.json?$select=municipio&$where=departamento%20=%20%22"+this.state+"%22&$order=municipio"
+      endpoint_countries: "",
+      endpoint_states: "",
+      endpoint_towns: ""
     }
   },
   methods: {
@@ -151,24 +170,23 @@ export default {
       console.debug(`[DBG]: SIGNUP COMPONENT -> checkPassword: ${this.user.password}`);
       this.password2="";
       if(this.user.password.length == 0){
-        disableElements("pwd");
+        disableElements("pwd", this.$refs);
       }
       else{
-        this.$refs['sel-region'].disabled=false;
-        disableElements("pwd2");
+        this.$refs["sel-pwd2"].disabled=false;
+        disableElements("pwd2", this.$refs);
       }
     },
     checkPassword1: function(){
-      console.debug(`[DBG]: SIGNUP COMPONENT -> checkPassword1: ${this.user.password} ${this.password2}`);
       if(this.password2.length != 0){
         if(this.user.password===this.password2){
           this.$refs['sel-pwd2'].disabled=true;
           this.msg1 = "";
-          this.enableElements("pwd2");
+          enableElements("pwd2", this.$refs, this.$data);
         }
         else{
           this.msg1 = "The passwords must match";
-          this.disableElements("pwd2");
+          disableElements("pwd2", this.$refs);
         }
       }
       else{
@@ -177,15 +195,15 @@ export default {
     },
     regionChangedEvent: function(){
       console.debug(`[DBG]: SIGNUP COMPONENT -> regionChangedEvent: ${this.region}`);
-      this.endpoint_countries = `https://restcountries.com/v3.1/subregion/${this.region}?fields=cca3,name,flag`;
-      console.debug(`[DBG]: SIGNUP COMPONENT -> regionChangedEvent: ${this.endpoint_countries}`);
+      this.endpoint_countries = `https://restcountries.com/v3.1/subregion/`+encodeURIComponent(this.region)+`?fields=cca3,name,flag`;
+      console.debug(`[DBG]: SIGNUP COMPONENT -> endpoint_countries: ${this.endpoint_countries}`);
       this.countries=[];
       this.states=[];
       this.towns=[];
       this.user.country="";
       this.user.state="";
       this.user.town="";
-      this.disableElements("region");
+      disableElements("region", this.$refs);
       axios.get(
         this.endpoint_countries,
         {headers:{}}
@@ -200,12 +218,11 @@ export default {
     },
     countryChangedEvent: function(){
       console.debug(`[DBG]: SIGNUP COMPONENT -> countryChangedEvent: ${this.user.country}`);
-      // this.endpoint_states=xxxxx //Actualizar los estados para los otros países
-      // console.debug(`[DBG]: SIGNUP COMPONENT -> countryChangedEvent: ${this.endpoint_states}`);
+      this.endpoint_states="https://www.datos.gov.co/resource/xdk5-pm3f.json?$select=distinct%20departamento&$order=departamento"; //Actualizar los estados para los otros países
       this.states=[];
       this.towns=[];
       this.user.state="";
-      this.disableElements("country");
+      disableElements("country", this.$refs);
       axios.get(
         this.endpoint_states,
         {headers:{}}
@@ -218,11 +235,10 @@ export default {
     },
     stateChangedEvent: function(){
       console.debug(`[DBG]: SIGNUP COMPONENT -> stateChangedEvent: ${this.user.state}`);
-      this.endpoint_towns=`https://www.datos.gov.co/resource/xdk5-pm3f.json?$select=municipio&$where=departamento='${this.user.state}'`
-      console.debug(`[DBG]: SIGNUP COMPONENT -> stateChangedEvent: ${this.endpoint_towns}`);
+      this.endpoint_towns="https://www.datos.gov.co/resource/xdk5-pm3f.json?$select=municipio&$where=departamento%20=%20%22"+encodeURIComponent(this.user.state)+"%22&$order=municipio";
       this.towns=[];
       this.user.town="";
-      this.disableElements("state");
+      disableElements("state", this.$refs);
       axios.get(
         this.endpoint_towns,
         {headers:{}}
@@ -246,36 +262,15 @@ export default {
       this.user.first_name = this.user.first_name.toUpperCase();
       this.user.last_name = this.user.last_name.toUpperCase();
       this.user.email = this.user.email.toLowerCase();
-      let result = this.validateUserData();
+      let result = validateUserData(this.$data.user);
       if(result.pass){
-        this.msg = "Welcome to HEIMDALL";
+        console.debug(`[DBG]: -> processSignup OK`);
+        this.msg2 = "Welcome to HEIMDALL";
       }
       else{
-        this.msg = result.msgs;
+        this.msg2 = result.msgs;
+        console.error(result.msgs);
       }
-    },
-    validateUserData: function(){
-      let result={pass:true,msgs:[]};
-      let includeEstrict=/[^A-Z,Ñ]/g;
-      const email_re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if( (this.user.first_name.length == 0) || (this.user.first_name.search(includeEstrict) != -1) ){
-        result.msgs.push("The First Name is empty or contains forbidden characters");
-        result.pass=false;
-      }
-      includeEstrict=/[^A-Z,Ñ, ,-]/g;
-      if( (this.user.last_name.length == 0) || (this.user.last_name.search(includeEstrict) != -1) ){
-        result.msgs.push("The Last Name is empty or contains forbidden characters");
-        result.pass=false;
-      }
-      if(!email_re.test(String(this.user.email))){
-        result.msgs.push("The e-mail is not valid");
-        result.pass=false;
-      }
-      if( (this.user.cellphone.length < 10) || (!/^\d+$/.test(this.user.cellphone)) ){
-        result.msgs.push("The Cell Phone number is not valid");
-        result.pass=false;
-      }
-      return result;
     }
   },
   created: function(){
