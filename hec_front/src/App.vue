@@ -1,22 +1,24 @@
 <template>
   <div id="app" class="app">
-    <div class="header">
-      <h1>HOSPITALIZACIÓN EN CASA</h1>
-    </div>
+    <CustomHeader msg="HOSPITALIZACIÓN EN CASA" />
   </div>
   <nav>
     <router-link to="/home">Home</router-link> |
-    <router-link to="/vue">Vue Info</router-link> |
     <router-link to="/tests">Tests</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/about">About</router-link> |
+    <router-link to="/vue">Vue Info</router-link>
   </nav>
   <router-view/>
 </template>
 
 <script>
+  // @ is an alias to /src
+  import CustomHeader from '@/components/CustomHeader.vue'
+
   export default {
     name: 'Home',
-    data: function(){},
+    components: {CustomHeader},
+    data: function(){return{}},
     methods:{},
     created: function(){}
   }
@@ -45,19 +47,5 @@
 
   nav a.router-link-exact-active {
     color: #42b983;
-  }
-
-  
-  .header {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 10vh;
-    min-height: 100px;
-    background-color: #283747 ;
-    color:darkgreen;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 </style>
