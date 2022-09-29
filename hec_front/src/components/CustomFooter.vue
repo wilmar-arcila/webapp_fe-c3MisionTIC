@@ -12,7 +12,7 @@
         <div class="aethyr-info">
             <p><i class="fa-solid fa-phone"></i>  +91-9999878398  </p>
             <p><i class="fa-solid fa-envelope"></i> info@aethyr.com  </p>
-            <p><a href="https://goo.gl/maps/upCuBV9RghwmjFt58"><i class="fa-solid fa-location-dot"></i></a> 221B Baker Street, Marinilla-Ant, Colombia</p>
+            <p><a href="https://goo.gl/maps/upCuBV9RghwmjFt58" target="_blank" ><i class="fa-solid fa-location-dot"></i></a> 221B Baker Street, Marinilla-Ant, Colombia</p>
         </div>
         <div class="copyright">
             <p class="text-center">Copyright @2022 | Designed by <a href="#">Æthyr Systems</a></p>
