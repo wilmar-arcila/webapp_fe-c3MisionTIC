@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="app">
-    <CustomHeader msg="HOSPITALIZACIÓN EN CASA" />  
+    <CustomHeader msg="HOSPITALIZACIÓN EN CASA" :routes="[{name:'Login',link:'/login'},{name:'Signup',link:'/signup'}]" />  
     <nav>
       <router-link to="/home">Home</router-link> |
       <router-link to="/tests">Tests</router-link> |
@@ -33,6 +33,7 @@
 <!-- Definición de estilo para IDs       -> #id      -->
 <style>
   @import url('https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/css/bootstrap.min.css');
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css');
   
   .app {
     font-family: Avenir, Helvetica, Arial, sans-serif;

@@ -27,8 +27,6 @@
 </script>
 
 <style scoped>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css');
-
 .footer {
     border-top:1px solid #323f45;
     min-height: 80px;

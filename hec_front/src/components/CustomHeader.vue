@@ -3,13 +3,13 @@
     <h1>{{ msg }}</h1>
     <div id="user_group" class="user_group">
         <div id="user_image" class="user_image">
-            <img alt="User Avatar" src="../assets/default_user.png">
+            <i alt="User avatar" class="fa-solid fa-user fa-5x"></i>
         </div>
         <div id="login_group" class="login_group">
             <nav>
-                <router-link to="/login">Login</router-link>
+                <router-link to={{routes[0].link}}>{{routes[0].name}}</router-link>
                 <br>
-                <router-link to="/signup">Signup</router-link>
+                <router-link to={{routes[0].link}}>{{routes[1].name}}</router-link>
             </nav>
         </div>
     </div>
@@ -19,7 +19,10 @@
 <script>    
     export default {
         name: 'CustomHeader',
-        props: {msg: String}
+        props: {
+                msg: {type: String, required:true, default: "MiEmpresa"},
+                routes: {type: Array, required: false, default: [{name:'Login',link:'/login'},{name:'Signup',link:'/signup'}]}
+        }
     }
 </script>
 
