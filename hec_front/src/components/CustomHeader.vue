@@ -6,9 +6,11 @@
             <img alt="User Avatar" src="../assets/default_user.png">
         </div>
         <div id="login_group" class="login_group">
-            <router-link to="/login">Login</router-link>
-            <br>
-            <router-link to="/signup">Signup</router-link>
+            <nav>
+                <router-link to="/login">Login</router-link>
+                <br>
+                <router-link to="/signup">Signup</router-link>
+            </nav>
         </div>
     </div>
     </div>
@@ -23,25 +25,24 @@
 
 <style scoped>
 .header {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 10vh;
     min-height: 100px;
-    background-color: #283747 ;
-    color:darkgreen;
+    height: 10vh;
+    width: 100%;
+    padding: 2vh;
+    margin: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    align-self: flex-start;
+    background-color: #28374793 ;
+    color:rgb(71, 73, 71);
 }
 .user_group {
-    display: inline-flex;
-    justify-content: left;
-    align-items: left;
-    align-content: center;
+    display: flex;
+    justify-content: right;
+    align-items: center;
 }
 .login_group {
     margin: 2vh;
-    align-items: center;
 }
 </style>>

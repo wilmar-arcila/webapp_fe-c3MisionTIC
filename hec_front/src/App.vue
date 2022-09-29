@@ -1,23 +1,27 @@
 <template>
   <div id="app" class="app">
-    <CustomHeader msg="HOSPITALIZACIÓN EN CASA" />
+    <CustomHeader msg="HOSPITALIZACIÓN EN CASA" />  
+    <nav>
+      <router-link to="/home">Home</router-link> |
+      <router-link to="/tests">Tests</router-link> |
+      <router-link to="/about">About</router-link> |
+      <router-link to="/vue">Vue Info</router-link>
+    </nav>
+    <div class="views">
+      <router-view/>
+    </div>    
+    <CustomFooter/>
   </div>
-  <nav>
-    <router-link to="/home">Home</router-link> |
-    <router-link to="/tests">Tests</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/vue">Vue Info</router-link>
-  </nav>
-  <router-view/>
 </template>
 
 <script>
   // @ is an alias to /src
   import CustomHeader from '@/components/CustomHeader.vue'
+  import CustomFooter from '@/components/CustomFooter.vue'
 
   export default {
-    name: 'Home',
-    components: {CustomHeader},
+    name: 'App',
+    components: { CustomHeader, CustomFooter, CustomFooter },
     data: function(){return{}},
     methods:{},
     created: function(){}
@@ -28,10 +32,16 @@
 <!-- Definición de estilo para CLASES    -> .clase   -->
 <!-- Definición de estilo para IDs       -> #id      -->
 <style>
-  #app {
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/css/bootstrap.min.css');
+  
+  .app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    display: block;
+    align-content: space-between;
+    justify-content: center;
+    justify-items: stretch;
     text-align: center;
     color: #2c3e50;
   }
@@ -47,5 +57,9 @@
 
   nav a.router-link-exact-active {
     color: #42b983;
+  }
+
+  .views {
+    min-height:55vh;
   }
 </style>

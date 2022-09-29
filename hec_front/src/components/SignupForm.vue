@@ -1,8 +1,8 @@
 <template>
-  <div class="signup-container">
-    <h1>{{ msg }}</h1>
+  <div class="signup">
+    <h2>{{ msg }}</h2>
     <hr>
-    <div class="signup">
+    <div class="signup-form">
       <form v-on:submit.prevent="processSignup">
         <fieldset>
           <legend> <h2>User Information</h2> </legend>
@@ -113,7 +113,7 @@ function validateUserData(data){
 }
 
 export default {
-  name: 'Signup',
+  name: 'SignupForm',
   props: {msg: String},
   data: function(){
     return{

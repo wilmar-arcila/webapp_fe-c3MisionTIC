@@ -1,20 +1,18 @@
 <template>
-  <div class="login-container">
-    <div class="login">
-      <h2>Inicio de Sesión</h2>
-      <form v-on:submit.prevent="processLoginUser">
-        <input type="text" placeholder="username@domain.com" v-model="user.email">
-        <br />
-        <input type="password" placeholder="password" v-model="user.password">
-        <br />
-        <button type="submit">Enviar</button>
-        <br />
-        <p>
-          <router-link to="/user/resetpassword">Olvidé mi contraseña</router-link> |
-          <router-link to="/user/signup">Registrarme</router-link>
-        </p>
-      </form>
-    </div>
+  <div class="login-form">
+    <h2>{{msg}}</h2>
+    <form v-on:submit.prevent="processLoginUser">
+      <input type="text" placeholder="username@domain.com" v-model="user.email">
+      <br />
+      <input type="password" placeholder="password" v-model="user.password">
+      <br />
+      <button type="submit">Enviar</button>
+      <br />
+      <p>
+        <router-link to="/resetpwd">Olvidé mi contraseña</router-link> |
+        <router-link to="/signup">Registrarme</router-link>
+      </p>
+    </form>
   </div>
 </template>
 
@@ -22,7 +20,8 @@
 import axios from 'axios';
 
 export default {
-  name: 'Login',
+  name: 'LoginForm',
+  props:{msg: String, server: String},
   data: function(){
     return{
       user: {
@@ -33,11 +32,11 @@ export default {
   },
   methods: {
     processLoginUser: function(){
-      console.debug(`[DBG]: LOGIN COMPONENT -> Sending Post Request`);
+      console.debug(`[DBG]: LOGIN COMPONENT -> Sending Post Request to ${this.$props.server}`);
       axios.post(
-        'localhost/8080/login',  // endpoint en el backend (tal vez sea necesario incluir 'http://' al inicio si se presenta un problema con 'cors')
-        this.user,                      // objeto JSON que contiene los campos requeridos para la autenticación del usuario
-        {headers:{}}                    // headers vacíos en esta petición
+        this.server,  // endpoint en el backend (tal vez sea necesario incluir 'http://' al inicio si se presenta un problema con 'cors')
+        this.user,    // objeto JSON que contiene los campos requeridos para la autenticación del usuario
+        {headers:{}}  // headers vacíos en esta petición
       )
       .then((result)=>{
         console.debug(`[DBG]: LOGIN COMPONENT -> Post Request Successfull`);

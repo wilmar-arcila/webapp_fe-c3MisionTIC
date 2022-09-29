@@ -1,12 +1,12 @@
 <template>
-    <div class="home-container">
-      <h1>This is a HOME page</h1>
-    </div>
+  <div class="resetpwd-form">
+    <h1>This is an RESET PASSWORD page</h1>
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'Home',
+    name: 'ResetPwdForm',
     data: function(){return{}},
     methods:{},
     created: function(){}
