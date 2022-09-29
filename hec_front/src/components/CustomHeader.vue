@@ -7,9 +7,9 @@
         </div>
         <div id="login_group" class="login_group">
             <nav>
-                <router-link to={{routes[0].link}}>{{routes[0].name}}</router-link>
+                <router-link :to="routes[0].link">{{routes[0].name}}</router-link>
                 <br>
-                <router-link to={{routes[0].link}}>{{routes[1].name}}</router-link>
+                <router-link :to=routes[1].link>{{routes[1].name}}</router-link>
             </nav>
         </div>
     </div>
