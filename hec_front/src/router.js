@@ -4,6 +4,8 @@ import Home from './views/HomeView.vue'
 import Tests from './views/TestsView.vue'
 import Login from './views/LoginView.vue'
 import Signup from './views/SignupView.vue'
+import Account from './views/AccountView.vue'
+import Logout from './views/LogoutView.vue'
 // import App from './App.vue'
 
 const routes = [
@@ -39,6 +41,16 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: Account
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: Logout
   }
 ]
 

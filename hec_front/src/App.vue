@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="app">
-    <CustomHeader msg="HOSPITALIZACIÓN EN CASA" :routes="[{name:'Login',link:'/login'},{name:'Signup',link:'/signup'}]" />  
+    <CustomHeader :msg="headerMsg" :routes="headerRoutes" />  
     <nav>
       <router-link to="/home">Home</router-link> |
       <router-link to="/tests">Tests</router-link> |
@@ -8,7 +8,9 @@
       <router-link to="/vue">Vue Info</router-link>
     </nav>
     <div class="views">
-      <router-view/>
+      <router-view v-on:completedLogIn="completedLogIn"
+                   v-on:logout="logout">
+      </router-view>
     </div>    
     <CustomFooter/>
   </div>
@@ -21,9 +23,23 @@
 
   export default {
     name: 'App',
-    components: { CustomHeader, CustomFooter, CustomFooter },
-    data: function(){return{}},
-    methods:{},
+    components: { CustomHeader, CustomFooter },
+    data: function(){return{
+            is_auth: false,
+            headerMsg: "HOSPITALIZACIÓN EN CASA",
+            headerRoutes: [{name:'Login',link:'/login'},{name:'Signup',link:'/signup'}]
+          }},
+    methods:{
+      completedLogIn: function(data) {
+        this.is_auth = true;
+        this.headerRoutes=[{name:'MyAccount',link:'/account'},{name:'Logout',link:'/logout'}];
+      },
+      completedSignUp: function(data) {},
+      logout: function(){
+        this.is_auth = false;
+        this.headerRoutes=[{name:'Login',link:'/login'},{name:'Signup',link:'/signup'}];
+      }
+    },
     created: function(){}
   }
 </script>
